@@ -611,11 +611,6 @@ ui <- dashboardPage(
           "[Software]. Available at:", br(),
           "agrivoltaics.agronomy4future.com"
         ),
-        br(), br(),
-        tags$img(src = "logo.svg", style = "width:80%;max-width:160px;"),
-        br(),
-        tags$span(style = "font-size:11px;color:#888;font-style:italic;",
-          "We aim to develop open-source code for agronomy")
     )
   ),
   dashboardBody(
@@ -846,7 +841,7 @@ ui <- dashboardPage(
             br(),
             hr(),
             p(strong("Reference:")),
-            p(a("Statistical Models in Agrivoltaics (agronomy4future.com)",
+            p(a("[STAT Article] Statistical Models in Agrivoltaics: Linear Mixed Models Across Different Field Layouts",
                 href="https://agronomy4future.com/archives/24404", target="_blank")),
             br(),
             p(strong("R Packages:")),
