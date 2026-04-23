@@ -10,7 +10,7 @@ if(!require(DT))           install.packages("DT");           library(DT)
 if(!require(readr))        install.packages("readr");        library(readr)
 if(!require(dplyr))        install.packages("dplyr");        library(dplyr)
 if(!require(readxl))       install.packages("readxl");       library(readxl)
-if(!require(RSQLite))       install.packages("RSQLite");       library(RSQLite)
+
 
 # ─────────────────────────────────────────────
 #  CASE DESCRIPTIONS
@@ -592,7 +592,7 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("Analysis",      tabName = "analysis", icon = icon("flask")),
-      menuItem("Developer Log", tabName = "devlog",  icon = icon("book")),
+
       menuItem("About",         tabName = "about",   icon = icon("info-circle"))
     ),
     hr(),
@@ -723,25 +723,7 @@ ui <- dashboardPage(
         ),
         uiOutput("results_ui")
       ),
-      tabItem(tabName = "devlog",
-        box(width=12, title="Developer Log", status="primary",
-            div(style="font-size:12px;color:#8b949e;margin-bottom:16px;",
-                "Posts tagged ", strong("#agrivoltaics"), " from ",
-                a("today.agronomy4future.com", href="https://today.agronomy4future.com", target="_blank")
-            ),
-            uiOutput("devlog_posts"),
-            br(),
-            fluidRow(
-              column(12, style="text-align:center;",
-                actionButton("devlog_prev", "← Prev", class="btn-default",
-                             style="margin-right:8px;"),
-                uiOutput("devlog_page_info"),
-                actionButton("devlog_next", "Next →", class="btn-default",
-                             style="margin-left:8px;")
-              )
-            )
-        )
-      ),
+
       tabItem(tabName = "about",
         box(width=12, title="About", status="primary",
             h4(strong("Why Agrivoltaics Needs Its Own Statistical Approach")),
@@ -1606,66 +1588,6 @@ server <- function(input, output, session) {
   })
 
 
-  # ── Developer Log ──────────────────────────────
-  DB_PATH <- "/srv/shiny-server/agrivoltaics/posts_today.db"
-  POSTS_PER_PAGE <- 5L
-  devlog_page <- reactiveVal(1L)
-
-  devlog_data <- reactive({
-    library(DBI)
-    library(RSQLite)
-    con <- dbConnect(RSQLite::SQLite(), DB_PATH)
-    on.exit(dbDisconnect(con))
-    dbGetQuery(con,
-      "SELECT id, content, post_date, image_path FROM posts
-       WHERE content LIKE '%#agrivoltaics%'
-          OR content LIKE '%hashtag#agrivoltaics%'
-       ORDER BY post_date DESC")
-  })
-
-  observeEvent(input$devlog_next, {
-    total <- ceiling(nrow(devlog_data()) / POSTS_PER_PAGE)
-    if (devlog_page() < total) devlog_page(devlog_page() + 1L)
-  })
-
-  observeEvent(input$devlog_prev, {
-    if (devlog_page() > 1L) devlog_page(devlog_page() - 1L)
-  })
-
-  output$devlog_page_info <- renderUI({
-    total <- ceiling(nrow(devlog_data()) / POSTS_PER_PAGE)
-    span(style="font-size:13px;color:#8b949e;margin:0 12px;",
-         paste0(devlog_page(), " / ", total))
-  })
-
-  output$devlog_posts <- renderUI({
-    df <- devlog_data()
-    if (nrow(df) == 0) return(p("No posts tagged #agrivoltaics yet."))
-    total <- ceiling(nrow(df) / POSTS_PER_PAGE)
-    pg    <- devlog_page()
-    s     <- (pg - 1L) * POSTS_PER_PAGE + 1L
-    e     <- min(pg * POSTS_PER_PAGE, nrow(df))
-    page_df <- df[s:e, ]
-
-    post_cards <- lapply(seq_len(nrow(page_df)), function(i) {
-      row <- page_df[i, ]
-      txt <- gsub("(#agrivoltaics|hashtag#agrivoltaics)",
-                  "<span style='color:#00d4aa;font-weight:bold;'>#agrivoltaics</span>",
-                  htmltools::htmlEscape(row$content))
-      txt <- gsub("\n", "<br>", txt)
-      img_tag <- if (!is.na(row$image_path) && nzchar(row$image_path)) {
-        fname <- basename(row$image_path)
-        tags$img(src=paste0("uploads/", fname),
-                 style="max-width:100%;border-radius:8px;margin-top:10px;")
-      } else NULL
-      div(style="border:1px solid #2a3441;border-radius:8px;padding:14px 18px;margin-bottom:14px;",
-        div(style="font-size:14px;color:#8b949e;margin-bottom:8px;", row$post_date),
-        div(style="font-size:16px;line-height:1.7;", HTML(txt)),
-        if (!is.null(img_tag)) img_tag
-      )
-    })
-    tagList(post_cards)
-  })
 
 }
 
