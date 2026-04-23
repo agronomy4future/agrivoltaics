@@ -1,0 +1,27 @@
+Package: agrivoltaics
+Title: Statistical Analysis Tool for Agrivoltaics Field Experiments
+Version: 0.1.0
+Authors@R: 
+    person("JK", "Kim", , "kimjk@agronomy4future.com", role = c("aut", "cre"))
+Description: Provides a Shiny-based graphical interface for fitting Linear 
+    Mixed Models (LMM) to agrivoltaics field experiment data. Supports 8 
+    experimental layout cases covering combinations of single/multiple 
+    cultivars, rows, and seasons. Based on the statistical framework 
+    developed at agronomy4future.com.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    shiny,
+    shinydashboard,
+    lme4,
+    lmerTest,
+    emmeans,
+    multcomp,
+    multcompView,
+    ggplot2,
+    DT,
+    readr,
+    dplyr,
+    RSQLite
