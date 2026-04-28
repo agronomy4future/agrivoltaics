@@ -1,10 +1,17 @@
-R Package
-agrivoltaics() — Run in your R console
+## How to Install and Run
 
-# Install
+You can run the **agrivoltaics** package directly in your R console using the following commands:
+
+### 1. Install
+```r
 if(!require(remotes)) install.packages("remotes")
 remotes::install_github("agronomy4future/agrivoltaics")
-
-# Run
+```
+### 2. Run
+```r
 library(agrivoltaics)
 launch_app()
+```
+```r
+### Web version:
+https://agrivoltaics.agronomy4future.com/
