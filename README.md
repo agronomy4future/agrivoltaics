@@ -12,6 +12,6 @@ remotes::install_github("agronomy4future/agrivoltaics")
 library(agrivoltaics)
 launch_app()
 ```
+### 3. Web version:
 ```r
-### Web version:
 https://agrivoltaics.agronomy4future.com/
